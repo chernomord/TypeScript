@@ -34,6 +34,17 @@ namespace ts.performance {
     }
 
     /**
+     * Marks a performance event.
+     *
+     * @param markName The name of the mark.
+     */
+    export function setCount(markName: string, count: number) {
+        if (enabled) {
+            counts.set(markName, count);
+        }
+    }
+
+    /**
      * Adds a performance measurement with the specified name.
      *
      * @param measureName The name of the performance measurement.

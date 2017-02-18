@@ -515,6 +515,7 @@ namespace ts {
             reportCountStatistic("Identifiers", program.getIdentifierCount());
             reportCountStatistic("Symbols", program.getSymbolCount());
             reportCountStatistic("Types", program.getTypeCount());
+            reportCountStatistic("Diagnostics", performance.getCount("Diagnostics"));
 
             if (memoryUsed >= 0) {
                 reportStatisticalValue("Memory used", Math.round(memoryUsed / 1000) + "K");
@@ -567,7 +568,11 @@ namespace ts {
             const emitOutput = program.emit();
             diagnostics = diagnostics.concat(emitOutput.diagnostics);
 
-            reportDiagnostics(sortAndDeduplicateDiagnostics(diagnostics), compilerHost);
+            diagnostics = sortAndDeduplicateDiagnostics(diagnostics);
+
+            performance.setCount("Diagnostics", diagnostics.length);
+
+            reportDiagnostics(diagnostics, compilerHost);
 
             reportEmittedFiles(emitOutput.emittedFiles);
 
