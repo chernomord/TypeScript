@@ -219,9 +219,8 @@ namespace ts {
 
         const emptyObjectType = createAnonymousType(undefined, emptySymbols, emptyArray, emptyArray, undefined, undefined);
 
-        const expandoObjectType = createAnonymousType(undefined, emptySymbols, emptyArray, emptyArray, createIndexInfo(anyType, false), undefined);
+        const emptyTypeLiteralSymbol = createSymbol(SymbolFlags.TypeLiteral | SymbolFlags.Transient, "__type");
 
-        const emptyTypeLiteralSymbol = createSymbol(SymbolFlags.TypeLiteral, "__type");
         emptyTypeLiteralSymbol.members = createMap<Symbol>();
         const emptyTypeLiteralType = createAnonymousType(emptyTypeLiteralSymbol, emptySymbols, emptyArray, emptyArray, undefined, undefined);
 
@@ -3451,13 +3450,6 @@ namespace ts {
             // Use the type of the initializer expression if one is present
             if (declaration.initializer) {
                 const type = checkDeclarationInitializer(declaration);
-
-                if (declaration.kind === SyntaxKind.VariableDeclaration &&
-                    isInJavaScriptFile(declaration) &&
-                    isObjectLiteralExpression(declaration.initializer)) {
-                    return getIntersectionType([type, expandoObjectType]);
-                }
-
                 return addOptionality(type, /*optional*/ declaration.questionToken && includeOptionality);
             }
 
